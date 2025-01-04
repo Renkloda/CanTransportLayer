@@ -3,6 +3,8 @@
 
 #include "ComStack_Types.h"
 
+#define NULL_PTR ((void *)0x00)
+
 #define CANTP_MODULE_ID (0x0Eu)
 #define CANTP_SW_MAJOR_VERSION (0x00u)
 #define CANTP_SW_MINOR_VERSION (0x01u)
@@ -12,6 +14,8 @@
 #define CANTP_SHUTDOWN_API_ID (0x02u)
 #define CANTP_TRANSMIT_API_ID (0x49u)
 #define CANTP_CANCEL_TRANSMIT_API_ID (0x4Au)
+
+#define CANTP_CAN_FRAME_SIZE (0x08u)
 
 
 #define N_AS_TIMEOUT_VALUE 1000
@@ -32,14 +36,14 @@ typedef enum {
 typedef enum {
     CANTP_TX_WAIT,                     
     CANTP_TX_PROCESSING
-} CanTpStateTX_type;
+}CanTpStateTX_type;
 
 typedef enum {
-    SF = 0, //Single Frame
+    SF = 0, // Single Frame
     FF = 1, // First Frame
     CF = 2, // Consecutive Frame 
-    FC = 3 // Frame Control
-} FrameType;
+    FC = 3 // Flow Control
+}FrameType;
 
 typedef enum
 {
@@ -146,30 +150,28 @@ typedef struct
 {
     const CanTp_RxNSduType *rx;
     const CanTp_TxNSduType *tx;
-
-}CanTp_Channel;
+}CanTp_ChannelType;
 
 
 typedef struct
 {
     const float CanTpMainFunctionPeriod;
-    const long long int CanTpMaxChannelCnt; /* CanTpMaxChannelCnt. */
-    const CanTp_Channel *pChannel;
-    
-} CanTp_ConfigType;
+    const long long int CanTpMaxChannelCnt;
+    const CanTp_ChannelType *pChannel;   
+}CanTp_ConfigType;
 
 typedef struct
 {
-    bool CanTpChangeParameterApi;
-    bool CanTpDevErrorDetect;
-    bool CanTpDynIdSupport;
-    bool CanTpFlexibleDataRateSupport;
-    bool CanTpGenericConnectionSupport;
+    const bool CanTpChangeParameterApi;
+    const bool CanTpDevErrorDetect;
+    const bool CanTpDynIdSupport;
+    const bool CanTpFlexibleDataRateSupport;
+    const bool CanTpGenericConnectionSupport;
+    const bool CanTpReadParameterApi;
+    const bool CanTpVersionInfoApi;
     const uint8 CanTpPaddingByte;
-    bool CanTpReadParameterApi;
-    bool CanTpVersionInfoApi;
-
-}CanTpGeneral;
+    
+}CanTp_GeneralType;
 
 
 
