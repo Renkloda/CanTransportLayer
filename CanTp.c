@@ -4,8 +4,8 @@
 
 
 CanTpState_type CanTpState = CANTP_OFF;
-static const CanTp_ConfigType *CanTp_ConfigPtr = NULL_PTR;
-static const CanTp_GeneralType *CanTpGeneralgPtr = NULL_PTR;
+static CanTp_ConfigType *CanTp_ConfigPtr = NULL_PTR;
+static CanTp_GeneralType *CanTpGeneralgPtr = NULL_PTR;
 
 
 typedef uint8 CanTp_FlowStatusType;
@@ -79,10 +79,19 @@ typedef struct
 } CanTp_NSduType;
 
 void CanTpInit(const CanTp_ConfigType* CfgPtr) {
-
+    uint8 value;
     if(CfgPtr != NULL_PTR){
 
         CanTp_ConfigPtr = CfgPtr;
+
+        CanTpGeneralgPtr->CanTpChangeParameterApi = 1;
+        CanTpGeneralgPtr->CanTpDevErrorDetect = 0;
+        CanTpGeneralgPtr->CanTpDynIdSupport = 0;
+        CanTpGeneralgPtr->CanTpFlexibleDataRateSupport = 0;
+        CanTpGeneralgPtr->CanTpGenericConnectionSupport = 1;
+        CanTpGeneralgPtr->CanTpPaddingByte = value;
+        CanTpGeneralgPtr->CanTpReadParameterApi = 1;
+        CanTpGeneralgPtr->CanTpVersionInfoApi = 1;
         CanTpState = CANTP_ON;
     }
 

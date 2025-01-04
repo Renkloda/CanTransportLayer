@@ -127,7 +127,7 @@ typedef struct
     float CanTpNas;
     float CanTpNbs;
     float CanTpNcs;
-    bool CanTpTc;
+    boolean CanTpTc;
     const CanTp_AddressingFormatType CanTpTxAddressingFormat;
     uint16 CanTpTxNSduId;
     const CanTpState_type CanTpTxPaddingActivation;
@@ -160,16 +160,16 @@ typedef struct
     const CanTp_ChannelType *pChannel;   
 }CanTp_ConfigType;
 
-typedef struct
-{
-    const bool CanTpChangeParameterApi;
-    const bool CanTpDevErrorDetect;
-    const bool CanTpDynIdSupport;
-    const bool CanTpFlexibleDataRateSupport;
-    const bool CanTpGenericConnectionSupport;
-    const bool CanTpReadParameterApi;
-    const bool CanTpVersionInfoApi;
-    const uint8 CanTpPaddingByte;
+typedef struct{
+
+    boolean CanTpChangeParameterApi;
+    boolean CanTpDevErrorDetect;
+    boolean CanTpDynIdSupport;
+    boolean CanTpFlexibleDataRateSupport;
+    boolean CanTpGenericConnectionSupport;
+    boolean CanTpReadParameterApi;
+    boolean CanTpVersionInfoApi;
+    uint8 CanTpPaddingByte;
     
 }CanTp_GeneralType;
 
