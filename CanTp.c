@@ -1,11 +1,12 @@
 #include "CanTp.h"
 #include "CanIf.h"
 #include "PduR_CanTp.h"
+#include "CanTp_FFF.h"
 
 
 CanTpState_type CanTpState = CANTP_OFF;
-static CanTp_ConfigType *CanTp_ConfigPtr = NULL_PTR;
-static CanTp_GeneralType *CanTpGeneralgPtr = NULL_PTR;
+CanTp_ConfigType *CanTp_ConfigPtr = NULL_PTR;
+CanTp_GeneralType *CanTpGeneralgPtr = NULL_PTR;
 
 
 typedef uint8 CanTp_FlowStatusType;
@@ -64,7 +65,7 @@ typedef struct
     CanTpStateTX_type taskState;
     // struct
     // {
-    //     // CanTp_FrameStateType state;
+        // CanTp_FrameStateType state;
     //     uint32 flag;
     // } shared;
 } CanTp_TxConnectionType;
@@ -83,7 +84,6 @@ void CanTpInit(const CanTp_ConfigType* CfgPtr) {
     if(CfgPtr != NULL_PTR){
 
         CanTp_ConfigPtr = CfgPtr;
-
         CanTpGeneralgPtr->CanTpChangeParameterApi = 1;
         CanTpGeneralgPtr->CanTpDevErrorDetect = 0;
         CanTpGeneralgPtr->CanTpDynIdSupport = 0;
@@ -113,17 +113,104 @@ void CanTp_Shutdown(void){
 
 Std_ReturnType CanTp_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr){
 
-    return E_OK;
+    CanTp_NSduType *p_n_sdu = NULL_PTR;
+    Std_ReturnType tmp_return = E_NOT_OK;
+    BufReq_ReturnType BufReqState;
+
+
+        if (CanTpState == CANTP_ON){
+
+            if (PduInfoPtr->MetaDataPtr != NULL_PTR){
+                p_n_sdu->tx.has_meta_data = TRUE;
+
+                if (p_n_sdu->tx.cfg->CanTpTxAddressingFormat == CANTP_EXTENDED)
+                {
+                    p_n_sdu->tx.saved_n_ta.CanTpNTa = PduInfoPtr->MetaDataPtr[0x00u];
+                }
+                else if (p_n_sdu->tx.cfg->CanTpTxAddressingFormat == CANTP_MIXED)
+                {
+                    p_n_sdu->tx.saved_n_ae.CanTpNAe = PduInfoPtr->MetaDataPtr[0x00u];
+                }
+                else if (p_n_sdu->tx.cfg->CanTpTxAddressingFormat == CANTP_NORMALFIXED)
+                {
+                    p_n_sdu->tx.saved_n_sa.CanTpNSa = PduInfoPtr->MetaDataPtr[0x00u];
+                    p_n_sdu->tx.saved_n_ta.CanTpNTa = PduInfoPtr->MetaDataPtr[0x01u];
+                }
+                else if (p_n_sdu->tx.cfg->CanTpTxAddressingFormat == CANTP_MIXED29BIT)
+                {
+                    p_n_sdu->tx.saved_n_sa.CanTpNSa = PduInfoPtr->MetaDataPtr[0x00u];
+                    p_n_sdu->tx.saved_n_ta.CanTpNTa = PduInfoPtr->MetaDataPtr[0x01u];
+                    p_n_sdu->tx.saved_n_ae.CanTpNAe = PduInfoPtr->MetaDataPtr[0x02u];
+                }
+                else
+                {
+                }
+
+
+            }else
+            {
+                p_n_sdu->tx.has_meta_data = FALSE;
+            }
+
+            if ((p_n_sdu->tx.taskState != CANTP_TX_PROCESSING) && (PduInfoPtr->SduLength > 0x0000u) && (PduInfoPtr->SduLength < 0x0008u))
+            {
+                BufReqState = PduR_CanTpCopyTxData(TxPduId, PduInfoPtr, NULL, PduInfoPtr->SduLength);
+                if(BufReqState == BUFREQ_OK){           
+                    tmp_return = CanTp_SendSF(TxPduId, PduInfoPtr->SduDataPtr, PduInfoPtr->SduLength);
+                }else if(BufReqState == BUFREQ_E_NOT_OK){
+                    //CanTp_ResetTX();  
+                    PduR_CanTpTxConfirmation(TxPduId, E_NOT_OK);
+                    tmp_return = E_NOT_OK;
+                }else{
+                    //TODO 
+                    tmp_return = E_OK;
+                }
+
+
+            }else if ((p_n_sdu->tx.taskState != CANTP_TX_PROCESSING) && (PduInfoPtr->SduLength >= 0x0008u) && (PduInfoPtr->SduLength <= 0x0FFFu)){
+                if(CanTp_SendFF(TxPduId, PduInfoPtr->SduLength) == E_OK){
+                    //TODO
+                    tmp_return = E_OK;
+                }else{
+                    tmp_return = E_NOT_OK;
+                }
+            }else{
+                tmp_return = E_NOT_OK;
+            }
+        }else{
+            tmp_return = E_NOT_OK;
+        }
+    return tmp_return;    
 }
 
 Std_ReturnType CanTp_CancelTransmit(PduIdType TxPduId){
 
-    return E_OK;
+    Std_ReturnType tmp_return = E_NOT_OK;
+
+    if(CanTp_ConfigPtr->pChannel->tx->CanTpTxNSduId == TxPduId ){
+        PduR_CanTpTxConfirmation(CanTp_ConfigPtr->pChannel->tx->CanTpTxNSduId, E_NOT_OK);
+        CanTp_ConfigPtr->pChannel->tx->CanTpTX_state = CANTP_TX_WAIT;
+        tmp_return = E_OK;
+    }
+    else{
+        tmp_return = E_NOT_OK;
+    }
+    return tmp_return;
 }
 
 Std_ReturnType CanTp_CancelReceive(PduIdType RxPduId){
 
-    return E_OK;
+    Std_ReturnType tmp_return = E_NOT_OK;
+
+    if(CanTp_ConfigPtr->pChannel->rx->CanTpRxNSduId == RxPduId ){
+        PduR_CanTpTxConfirmation(CanTp_ConfigPtr->pChannel->tx->CanTpTxNSduId, E_NOT_OK);
+        CanTp_ConfigPtr->pChannel->tx->CanTpTX_state = CANTP_TX_WAIT;
+        tmp_return = E_OK;
+    }
+    else{
+        tmp_return = E_NOT_OK;
+    }
+    return tmp_return;
 }
 
 Std_ReturnType CanTp_ChangeParameter(PduIdType id, TPParameterType parameter, uint16 value){

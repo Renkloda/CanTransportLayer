@@ -120,6 +120,8 @@ typedef struct
 
     CanTpRxNPduType CanTpRxNPdu;
     CanTpTxFcNPduType CanTpTxFcNPdu;
+
+    CanTpStateRX_type CanTpRX_state;
 }CanTp_RxNSduType;
 
 typedef struct 
@@ -142,14 +144,14 @@ typedef struct
     CanTpRxNPduType CanTpTxNPdu;
     CanTpTxFcNPduType CanRpTxFcNPdu;
 
-
+    CanTpStateTX_type CanTpTX_state;
 }CanTp_TxNSduType;
 
 
 typedef struct 
 {
-    const CanTp_RxNSduType *rx;
-    const CanTp_TxNSduType *tx;
+    CanTp_RxNSduType *rx;
+    CanTp_TxNSduType *tx;
 }CanTp_ChannelType;
 
 
@@ -157,7 +159,7 @@ typedef struct
 {
     const float CanTpMainFunctionPeriod;
     const long long int CanTpMaxChannelCnt;
-    const CanTp_ChannelType *pChannel;   
+    CanTp_ChannelType *pChannel;   
 }CanTp_ConfigType;
 
 typedef struct{
