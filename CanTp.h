@@ -19,9 +19,13 @@
 
 
 #define N_AS_TIMEOUT_VALUE 1000
-#define N_AR_TIMEOUT_VALUE 1000
 #define N_BS_TIMEOUT_VALUE 1000
+#define N_CS_TIMEOUT_VALUE 1000
+#define N_AR_TIMEOUT_VALUE 1000
+#define N_BR_TIMEOUT_VALUE 1000
+#define N_CR_TIMEOUT_VALUE 1000
 
+#define STMmin_TIMEOUT_VALUE 1000
 
 typedef enum {
     CANTP_OFF, 
@@ -42,8 +46,20 @@ typedef enum {
     SF = 0, // Single Frame
     FF = 1, // First Frame
     CF = 2, // Consecutive Frame 
-    FC = 3 // Flow Control
+    FC = 3, // Flow Control
+    DEFAULT = 4
 }FrameType;
+
+typedef struct{
+    FrameType eFrameType;
+    uint32 uiFrameLenght; 
+    uint8 uiSequenceNumber;
+    uint8 uiBlockSize; 
+    uint8 uiFlowStatus; 
+    uint8 uiSeparationTime;
+} CanPCI_Type;
+
+
 
 typedef enum
 {
@@ -175,6 +191,16 @@ typedef struct{
     
 }CanTp_GeneralType;
 
+typedef enum{
+    TIMER_ENABLE,
+    TIMER_DISABLE
+} TimerState;
+
+typedef struct{
+    TimerState    eState;
+    uint32        uiCounter; 
+    const uint32  uiTimeout; 
+} CanTp_Timer_type;
 
 
 void CanTp_Init(const CanTp_ConfigType* CfgPtr);
