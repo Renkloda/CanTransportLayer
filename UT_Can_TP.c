@@ -332,8 +332,6 @@ void Test_CanTp_RxIndication(void) {
     free(p_n_sdu);
 }
 
-
-
 /**
   @brief Test Potwierdzenia transmisji
 
@@ -345,7 +343,6 @@ void Test_Of_CanTp_TxConfirmation(void){
     // Scenariusz 1: Transmisja poprawna
     CanTpState = CANTP_ON;
     p_n_sdu->tx.taskState = CANTP_TX_PROCESSING;
-    p_n_sdu->tx.cfg = calloc(1, sizeof(CanTp_TxNSduType));
     p_n_sdu->tx.cfg->CanTpTxNSduId = txPduId;
 
     CanTp_TxConfirmation(txPduId, E_OK);
@@ -354,6 +351,7 @@ void Test_Of_CanTp_TxConfirmation(void){
     // Scenariusz 2: Transmisja nieudana
     CanTp_TxConfirmation(txPduId, E_NOT_OK);
     TEST_CHECK(p_n_sdu->tx.taskState == CANTP_TX_WAIT);
+
 
 }
 
@@ -446,6 +444,7 @@ TEST_LIST = {
     // { "Test of CanTp_TimerReset", Test_CanTp_TimerReset },
     { "Test of CanTp_TimerTick", Test_CanTp_TimerTick },
     { "Test of CanTp_TimerTimeout", Test_CanTp_TimerTimeout },
+    { "Test of CanTp_RxIndication", Test_CanTp_RxIndication },
     { "Test of CanTp_TxConfirmation", Test_Of_CanTp_TxConfirmation },
     { "Test of CanTp_CancelReceive", Test_Of_CanTp_CancelReceive },
     { "Test of CanTp_CancelTransmit", Test_Of_CanTp_CancelTransmit },
