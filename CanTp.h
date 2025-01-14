@@ -219,13 +219,4 @@ void CanTp_RxIndication(PduIdType RxPduId, const PduInfoType* PduInfoPtr);
 void CanTp_TxConfirmation(PduIdType TxPduId, Std_ReturnType result);
 
 
-
-
-
-
-
-
-
-
-
 #endif CAN_TP_H
