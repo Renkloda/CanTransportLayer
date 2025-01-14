@@ -1,6 +1,3 @@
-#ifndef CAN_TP_H
-#define CAN_TP_H
-
 #include "ComStack_Types.h"
 
 #define NULL_PTR ((void *)0x00)
@@ -217,5 +214,3 @@ void CanTp_MainFunction(void);
 
 void CanTp_RxIndication(PduIdType RxPduId, const PduInfoType* PduInfoPtr);
 void CanTp_TxConfirmation(PduIdType TxPduId, Std_ReturnType result);
-
-#endif CAN_TP_H
