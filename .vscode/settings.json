@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "pdur_cantp.h": "c"
+        "pdur_cantp.h": "c",
+        "fff.h": "c"
     }
 }

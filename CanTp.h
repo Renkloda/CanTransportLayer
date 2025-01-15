@@ -1,7 +1,7 @@
 #include "ComStack_Types.h"
 
 #define NULL_PTR ((void *)0x00)
-
+#define NE_NULL_PTR( ptr ) (ptr != NULL)
 #define CANTP_MODULE_ID (0x0Eu)
 #define CANTP_SW_MAJOR_VERSION (0x00u)
 #define CANTP_SW_MINOR_VERSION (0x01u)
@@ -143,7 +143,7 @@ typedef struct
     float CanTpNbs;
     float CanTpNcs;
     boolean CanTpTc;
-    const CanTp_AddressingFormatType CanTpTxAddressingFormat;
+    CanTp_AddressingFormatType CanTpTxAddressingFormat;
     uint16 CanTpTxNSduId;
     const CanTpState_type CanTpTxPaddingActivation;
     const CanTp_ComTypeType CanTpTxTaType;
@@ -163,8 +163,8 @@ typedef struct
 
 typedef struct 
 {
-    CanTp_RxNSduType *rx;
-    CanTp_TxNSduType *tx;
+    CanTp_RxNSduType rx;
+    CanTp_TxNSduType tx;
 }CanTp_ChannelType;
 
 
@@ -172,7 +172,7 @@ typedef struct
 {
     const float CanTpMainFunctionPeriod;
     const long long int CanTpMaxChannelCnt;
-    CanTp_ChannelType *pChannel;   
+    CanTp_ChannelType pChannel;   
 }CanTp_ConfigType;
 
 typedef struct{
