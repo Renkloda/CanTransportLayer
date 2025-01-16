@@ -90,7 +90,7 @@ CanTp_GeneralType CanTpGeneralgPtr;
 //[SWS_CanTp_00208]
 
 void CanTpInit(const CanTp_ConfigType* CfgPtr) {
-    uint8 value;
+    uint8 value =1;
     if(CfgPtr != NULL_PTR){
 
         CanTpGeneralgPtr.CanTpChangeParameterApi = 1;

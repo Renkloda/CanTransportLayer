@@ -1,0 +1,58 @@
+[Platform_Types.h:13]: (information) Include file: <stdint.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[CanTp.c:0]: (information) Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches.
+[CanTp.c:93]: (style) The scope of the variable 'value' can be reduced.
+[CanTp.c:131]: (style) The scope of the variable 'BufReqState' can be reduced.
+[CanTp.c:245]: (style) The scope of the variable 'task_state' can be reduced.
+[CanTp.c:277]: (style) The scope of the variable 'temp_value' can be reduced.
+[CanTp.c:27]: (style) struct member 'CanTp_NSduBufferType::can' is never used.
+[CanTp.c:28]: (style) struct member 'CanTp_NSduBufferType::size' is never used.
+[CanTp.c:29]: (style) struct member 'CanTp_NSduBufferType::rmng' is never used.
+[CanTp.c:34]: (style) struct member 'CanTp_RxConnectionType::cfg' is never used.
+[CanTp.c:35]: (style) struct member 'CanTp_RxConnectionType::buf' is never used.
+[CanTp.c:36]: (style) struct member 'CanTp_RxConnectionType::meta_data_lower' is never used.
+[CanTp.c:37]: (style) struct member 'CanTp_RxConnectionType::meta_data_upper' is never used.
+[CanTp.c:38]: (style) struct member 'CanTp_RxConnectionType::saved_n_sa' is never used.
+[CanTp.c:39]: (style) struct member 'CanTp_RxConnectionType::saved_n_ta' is never used.
+[CanTp.c:40]: (style) struct member 'CanTp_RxConnectionType::saved_n_ae' is never used.
+[CanTp.c:41]: (style) struct member 'CanTp_RxConnectionType::has_meta_data' is never used.
+[CanTp.c:42]: (style) struct member 'CanTp_RxConnectionType::fs' is never used.
+[CanTp.c:43]: (style) struct member 'CanTp_RxConnectionType::st_min' is never used.
+[CanTp.c:44]: (style) struct member 'CanTp_RxConnectionType::bs' is never used.
+[CanTp.c:45]: (style) struct member 'CanTp_RxConnectionType::sn' is never used.
+[CanTp.c:46]: (style) struct member 'CanTp_RxConnectionType::wft_max' is never used.
+[CanTp.c:47]: (style) struct member 'CanTp_RxConnectionType::can_if_pdu_info' is never used.
+[CanTp.c:48]: (style) struct member 'CanTp_RxConnectionType::pdu_r_pdu_info' is never used.
+[CanTp.c:64]: (style) struct member 'CanTp_TxConnectionType::buf' is never used.
+[CanTp.c:65]: (style) struct member 'CanTp_TxConnectionType::meta_data' is never used.
+[CanTp.c:70]: (style) struct member 'CanTp_TxConnectionType::fs' is never used.
+[CanTp.c:71]: (style) struct member 'CanTp_TxConnectionType::target_st_min' is never used.
+[CanTp.c:72]: (style) struct member 'CanTp_TxConnectionType::st_min' is never used.
+[CanTp.c:73]: (style) struct member 'CanTp_TxConnectionType::bs' is never used.
+[CanTp.c:74]: (style) struct member 'CanTp_TxConnectionType::sn' is never used.
+[CanTp.c:75]: (style) struct member 'CanTp_TxConnectionType::can_if_pdu_info' is never used.
+[acutest.h:275]: (information) Include file: <ctype.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:276]: (information) Include file: <stdarg.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:277]: (information) Include file: <stdio.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:278]: (information) Include file: <stdlib.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:279]: (information) Include file: <string.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:280]: (information) Include file: <setjmp.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:750]: (style) Variable 'line_beg' can be declared as pointer to const
+[acutest.h:1362]: (style) Variable 'assignment' can be declared as pointer to const
+[acutest.h:1766]: (style) Variable 'details' can be declared as pointer to const
+[acutest.h:284]: (information) Include file: <errno.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:285]: (information) Include file: <libgen.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:286]: (information) Include file: <unistd.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:287]: (information) Include file: <sys/types.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:288]: (information) Include file: <sys/wait.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:289]: (information) Include file: <signal.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:290]: (information) Include file: <time.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:1754]: (style) Variable 'suite_name' can be declared as pointer to const
+[acutest.h:305]: (information) Include file: <windows.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:306]: (information) Include file: <io.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:299]: (information) Include file: <fcntl.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[acutest.h:300]: (information) Include file: <sys/stat.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[UT_Can_TP.c:6]: (information) Include file: <stdio.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[UT_Can_TP.c:7]: (information) Include file: <string.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[UT_Can_TP.c:0]: (information) Limiting analysis of branches. Use --check-level=exhaustive to analyze all branches.
+[fff.h:29]: (information) Include file: <stdarg.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
+[fff.h:30]: (information) Include file: <string.h> not found. Please note: Cppcheck does not need standard library headers to get proper results.
