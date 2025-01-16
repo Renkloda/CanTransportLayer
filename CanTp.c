@@ -83,15 +83,16 @@ typedef struct
 } CanTp_NSduType;
 
 CanTpState_type CanTpState = CANTP_OFF;
-CanTp_NSduType p_n_sdu;  // = NULL_PTR;
-CanTp_ConfigType CanTp_ConfigPtr; //= NULL_PTR;
-CanTp_GeneralType CanTpGeneralgPtr; //= NULL_PTR;
+CanTp_NSduType p_n_sdu; 
+CanTp_ConfigType CanTp_ConfigPtr; 
+CanTp_GeneralType CanTpGeneralgPtr; 
+
+//[SWS_CanTp_00208]
 
 void CanTpInit(const CanTp_ConfigType* CfgPtr) {
     uint8 value;
     if(CfgPtr != NULL_PTR){
 
-        // CanTp_ConfigPtr = &CfgPtr;
         CanTpGeneralgPtr.CanTpChangeParameterApi = 1;
         CanTpGeneralgPtr.CanTpDevErrorDetect = 0;
         CanTpGeneralgPtr.CanTpDynIdSupport = 0;
@@ -105,6 +106,7 @@ void CanTpInit(const CanTp_ConfigType* CfgPtr) {
 
 }
 
+//SWS_CanTp_00210
 void CanTp_GetVersionInfo(Std_VersionInfoType* versioninfo) {
     if (versioninfo != NULL_PTR) {
         versioninfo->vendorID = 0x00u;
@@ -115,10 +117,14 @@ void CanTp_GetVersionInfo(Std_VersionInfoType* versioninfo) {
     }
 }
 
+//SWS_CanTp_00211
 void CanTp_Shutdown(void){
+    
+    //[//SWS_CanTp_00200]
     CanTpState = CANTP_OFF;
 }
 
+//SWS_CanTp_00212
 Std_ReturnType CanTp_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr){
 
     Std_ReturnType tmp_return = E_NOT_OK;
@@ -129,7 +135,7 @@ Std_ReturnType CanTp_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr){
 
             if (PduInfoPtr->MetaDataPtr != NULL_PTR){
                 p_n_sdu.tx.has_meta_data = TRUE;
-
+                // SWS_CanTp_00334
                 if (p_n_sdu.tx.cfg.CanTpTxAddressingFormat == CANTP_EXTENDED)
                 {
                     p_n_sdu.tx.saved_n_ta.CanTpNTa = PduInfoPtr->MetaDataPtr[0x00u];
@@ -158,14 +164,19 @@ Std_ReturnType CanTp_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr){
             {
                 p_n_sdu.tx.has_meta_data = FALSE;
             }
-
+            // SWS_CanTp_00206
             if ((p_n_sdu.tx.taskState != CANTP_TX_PROCESSING) && (PduInfoPtr->SduLength > 0x0000u) && (PduInfoPtr->SduLength < 0x0008u))
-            {
+            {   
+                //SWS_CanTp_00231
+
                 BufReqState = PduR_CanTpCopyTxData(TxPduId, PduInfoPtr, NULL, (PduLengthType *)PduInfoPtr->SduLength);
-                if(BufReqState == BUFREQ_OK){           
+                if(BufReqState == BUFREQ_OK){    
+
                     tmp_return = CanTp_SendSF(TxPduId, PduInfoPtr->SduDataPtr, PduInfoPtr->SduLength);
                 }else if(BufReqState == BUFREQ_E_NOT_OK){
+                    // SWS_CanTp_00298
                     CanTp_ConfigPtr.pChannel.tx.CanTpTX_state = CANTP_TX_WAIT; 
+                    // SWS_CanTp_00205
                     PduR_CanTpTxConfirmation(TxPduId, E_NOT_OK);
                     tmp_return = E_NOT_OK;
                 }else{
@@ -190,40 +201,48 @@ Std_ReturnType CanTp_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr){
     return tmp_return;    
 }
 
+//SWS_CanTp_00246
 Std_ReturnType CanTp_CancelTransmit(PduIdType TxPduId){
 
     Std_ReturnType tmp_return = E_NOT_OK;
 
     if(CanTp_ConfigPtr.pChannel.tx.CanTpTxNSduId == TxPduId){
+        //SWS_CanTp_00255
         PduR_CanTpTxConfirmation(CanTp_ConfigPtr.pChannel.tx.CanTpTxNSduId, E_NOT_OK);
         CanTp_ConfigPtr.pChannel.tx.CanTpTX_state = CANTP_TX_WAIT;
+        //SWS_CanTp_00256
         tmp_return = E_OK;
     }
     else{
+        //SWS_CanTp_00254
         tmp_return = E_NOT_OK;
     }
     return tmp_return;
 }
 
+//SWS_CanTp_00257
 Std_ReturnType CanTp_CancelReceive(PduIdType RxPduId){
 
     Std_ReturnType tmp_return = E_NOT_OK;
 
     if(CanTp_ConfigPtr.pChannel.rx.CanTpRxNSduId == RxPduId ){
-        PduR_CanTpTxConfirmation(CanTp_ConfigPtr.pChannel.tx.CanTpTxNSduId, E_NOT_OK);
-        CanTp_ConfigPtr.pChannel.tx.CanTpTX_state = CANTP_TX_WAIT;
+        //SWS_CanTp_00263
+        PduR_CanTpTxConfirmation(CanTp_ConfigPtr.pChannel.rx.CanTpRxNSduId, E_NOT_OK);
+        CanTp_ConfigPtr.pChannel.rx.CanTpRX_state = CANTP_RX_WAIT;
+        //SWS_CanTp_00261
         tmp_return = E_OK;
     }
     else{
+        //SWS_CanTp_00260
         tmp_return = E_NOT_OK;
     }
     return tmp_return;
 }
 
+//SWS_CanTp_00302
 Std_ReturnType CanTp_ChangeParameter(PduIdType id, TPParameterType parameter, uint16 value){
     Std_ReturnType tmp_ret = E_NOT_OK;
     CanTpStateRX_type task_state;
-    
     
     if (CanTpState == CANTP_ON){
         if(CanTpGeneralgPtr.CanTpChangeParameterApi == 1){
@@ -252,7 +271,7 @@ Std_ReturnType CanTp_ChangeParameter(PduIdType id, TPParameterType parameter, ui
     return tmp_ret;
 }
 
-
+//SWS_CanTp_00323
 Std_ReturnType CanTp_ReadParameter(PduIdType id, TPParameterType parameter, uint16* value){
     Std_ReturnType tmp_ret = E_NOT_OK;
     uint16 temp_value;
@@ -283,8 +302,9 @@ Std_ReturnType CanTp_ReadParameter(PduIdType id, TPParameterType parameter, uint
     
 }
 
+// SWS_CanTp_00213
 void CanTp_MainFunction(void){
-    /* Wypełnia [SWS_CANTP_00164]*/
+    // SWS_CanTp_00164
     CanTp_TimerTick(&N_Ar_timer);
     CanTp_TimerTick(&N_Br_timer);
     CanTp_TimerTick(&N_Cr_timer);
@@ -341,7 +361,7 @@ void CanTp_MainFunction(void){
    }
 }
 
-
+//SWS_CanTp_00214
 void CanTp_RxIndication(PduIdType RxPduId, const PduInfoType* PduInfoPtr){
     
     CanPCI_Type CanPCI;    
@@ -391,7 +411,7 @@ void CanTp_RxIndication(PduIdType RxPduId, const PduInfoType* PduInfoPtr){
 
 
 
-
+//SWS_CanTp_00215
 void CanTp_TxConfirmation(PduIdType TxPduId, Std_ReturnType result){
 if( CanTpState == CANTP_ON ){  
     if(CanTp_ConfigPtr.pChannel.rx.CanTpRxNSduId == TxPduId){
