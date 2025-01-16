@@ -27,37 +27,6 @@ FAKE_VOID_FUNC(CanTp_SFReception, PduIdType, CanPCI_Type*, const PduInfoType*);
 FAKE_VOID_FUNC(CanTp_CFReception, PduIdType, CanPCI_Type*, const PduInfoType*);
 FAKE_VOID_FUNC(CanTp_FCReception, PduIdType, CanPCI_Type*);
 
-uint8 PduR_CanTpCopyTxData_sdu_data[20][7];
-PduLengthType *PduR_CanTpCopyTxData_availableDataPtr; 
-PduLengthType* PduR_CanTpCopyRxData_buffSize_array;
-PduLengthType *PduR_CanTpStartOfReception_buffSize_array;
-
-
-BufReq_ReturnType PduR_CanTpCopyTxData_FF(PduIdType id, const PduInfoType* info, const RetryInfoType* retry, PduLengthType* availableDataPtr){
-    static int i = 0;
-    int iCtr;
-    i = PduR_CanTpCopyTxData_fake.call_count - 1;
-    for(iCtr = 0; iCtr < info->SduLength; iCtr++ ){
-      info->SduDataPtr[iCtr] = PduR_CanTpCopyTxData_sdu_data[i][iCtr];
-    }
-    *availableDataPtr = PduR_CanTpCopyTxData_availableDataPtr[i];
-    return PduR_CanTpCopyTxData_fake.return_val_seq[i];
-}
-
-BufReq_ReturnType PduR_CanTpStartOfReception_FF(PduIdType id, const PduInfoType* info, PduLengthType TpSduLength, PduLengthType* bufferSizePtr){
-    static int i = 0;
-    i = PduR_CanTpStartOfReception_fake.call_count - 1;
-    *bufferSizePtr = PduR_CanTpStartOfReception_buffSize_array[i];
-   return PduR_CanTpStartOfReception_fake.return_val_seq[i];
-}
-
-BufReq_ReturnType PduR_CanTpCopyRxData_FF(PduIdType id, const PduInfoType* info, PduLengthType* bufferSizePtr){
-    static int i = 0;
-    i = PduR_CanTpCopyRxData_fake.call_count - 1;
-    *bufferSizePtr = PduR_CanTpCopyRxData_buffSize_array[i];
-    return PduR_CanTpCopyRxData_fake.return_val_seq[i];
-}
-
 
 /** ==================================================================================================================*\
                                 TESTY JEDNOSTKOWE
@@ -132,7 +101,7 @@ void TestOf_CanTp_Transmit(void){
     RESET_FAKE(PduR_CanTpTxConfirmation);
     RESET_FAKE(CanTp_SendFF);
 
-    BufReq_ReturnType retPduR_CanTpCopyTxData[7] = {BUFREQ_OK, BUFREQ_E_NOT_OK, BUFREQ_E_OVFL, E_OK, E_NOT_OK, E_NOT_OK, E_NOT_OK};
+    BufReq_ReturnType retPduR_CanTpCopyTxData[7] = {BUFREQ_OK, BUFREQ_E_NOT_OK, BUFREQ_E_OVFL, BUFREQ_OK, BUFREQ_OK, BUFREQ_OK, BUFREQ_OK};
     SET_RETURN_SEQ(PduR_CanTpCopyTxData, retPduR_CanTpCopyTxData, 7);
 
     Std_ReturnType retCanTp_SendSF[7] = {E_OK, E_OK, E_NOT_OK, E_OK, E_NOT_OK, E_NOT_OK, E_NOT_OK};
@@ -236,7 +205,7 @@ void TestOf_CanTp_Transmit(void){
     TEST_CHECK(p_n_sdu.tx.has_meta_data == FALSE);
     TEST_CHECK(PduR_CanTpCopyTxData_fake.call_count == 4);
 
-     //TEST7
+     //TEST8
 
     p_n_sdu.tx.cfg.CanTpTxAddressingFormat = CANTP_MIXED29BIT;
     CanTpState = CANTP_ON;
